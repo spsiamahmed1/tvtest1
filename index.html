@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <meta name="description" content="StreamWave — Your World. Your Channels. Global live TV streaming." />
+  <title>StreamWave · Your World. Your Channels.</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Icons (Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- HLS.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ==================== HEADER ==================== -->
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="#" class="brand" id="brandHome" aria-label="StreamWave home">
+        <span class="brand-mark"><i class="fa-solid fa-wave-square"></i></span>
+        <span class="brand-text">StreamWave</span>
+      </a>
+      <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="globalSearch" placeholder="Search channels…" aria-label="Search channels" autocomplete="off" />
+      </div>
+      <div class="header-actions">
+        <div class="lang-wrap">
+          <label for="langSelect" class="visually-hidden">Interface language</label>
+          <select id="langSelect" class="lang-select" aria-label="Interface language">
+            <option value="en">English</option>
+            <option value="bn">বাংলা</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ar">العربية</option>
+          </select>
+        </div>
+        <button class="icon-btn" id="favShortcut" aria-label="Open favorites">
+          <i class="fa-solid fa-heart"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="app-shell">
+    <!-- ===== SIDEBAR (desktop/TV) ===== -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Primary">
+      <nav>
+        <ul class="nav-list" id="navList">
+          <li><button class="nav-btn active" data-view="home"><i class="fa-solid fa-house"></i><span data-i18n="nav.home">Home</span></button></li>
+          <li><button class="nav-btn" data-view="live"><i class="fa-solid fa-tv"></i><span data-i18n="nav.live">Live TV</span></button></li>
+          <li><button class="nav-btn" data-view="channels"><i class="fa-solid fa-list"></i><span data-i18n="nav.channels">All Channels</span></button></li>
+          <li><button class="nav-btn" data-view="countries"><i class="fa-solid fa-globe"></i><span data-i18n="nav.countries">Countries</span></button></li>
+          <li><button class="nav-btn" data-view="categories"><i class="fa-solid fa-layer-group"></i><span data-i18n="nav.categories">Categories</span></button></li>
+          <li><button class="nav-btn" data-view="favorites"><i class="fa-solid fa-heart"></i><span data-i18n="nav.favorites">Favorites</span></button></li>
+          <li><button class="nav-btn" data-view="recent"><i class="fa-solid fa-clock-rotate-left"></i><span data-i18n="nav.recent">Recently Watched</span></button></li>
+          <li><button class="nav-btn" data-view="settings"><i class="fa-solid fa-gear"></i><span data-i18n="nav.settings">Settings</span></button></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="mini-note"><i class="fa-solid fa-circle-info"></i> Streams may be geo-blocked or offline.</p>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent" role="main">
+      <!-- Loading / Error / Status bar -->
+      <div id="statusBar" class="status-bar" hidden>
+        <span id="statusText"></span>
+        <button id="retryBtn" class="btn btn-small" hidden><i class="fa-solid fa-rotate-right"></i> Retry</button>
+      </div>
+
+      <!-- ===== VIEW: HOME ===== -->
+      <section class="view" id="view-home">
+        <div class="hero">
+          <div class="hero-content">
+            <p class="hero-kicker">StreamWave · Your World. Your Channels.</p>
+            <h1 class="hero-title">Global live TV, <span>beautifully streamed.</span></h1>
+            <p class="hero-sub">Browse thousands of real channels from around the world — news, sports, movies, music, and more.</p>
+            <div class="hero-cta">
+              <button class="btn btn-primary" data-view="live" id="heroExplore"><i class="fa-solid fa-play"></i> Explore Channels</button>
+              <button class="btn btn-ghost" data-view="categories"><i class="fa-solid fa-layer-group"></i> Browse Categories</button>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring delay"></div>
+            <i class="fa-solid fa-tower-broadcast"></i>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <h2 data-i18n="home.popular">Popular Channels</h2>
+          <button class="link-btn" data-view="channels">View all <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="card-grid" id="homePopularGrid" aria-live="polite"></div>
+
+        <div class="section-head">
+          <h2 data-i18n="home.recent">Recently Watched</h2>
+          <button class="link-btn" data-view="recent">See all <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="card-grid" id="homeRecentGrid"></div>
+
+        <div class="section-head">
+          <h2 data-i18n="home.favorites">Your Favorites</h2>
+          <button class="link-btn" data-view="favorites">Manage <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="card-grid" id="homeFavGrid"></div>
+
+        <div class="section-head"><h2 data-i18n="home.countries">Browse by Country</h2></div>
+        <div class="chip-row" id="homeCountryChips"></div>
+
+        <div class="section-head"><h2 data-i18n="home.languages">Browse by Language</h2></div>
+        <div class="chip-row" id="homeLanguageChips"></div>
+
+        <div class="section-head"><h2 data-i18n="home.categories">Browse by Category</h2></div>
+        <div class="chip-row" id="homeCategoryChips"></div>
+      </section>
+
+      <!-- ===== VIEW: LIVE TV (player + list) ===== -->
+      <section class="view" id="view-live" hidden>
+        <div class="live-layout">
+          <div class="player-panel">
+            <div class="player-frame" id="playerFrame">
+              <video id="videoPlayer" playsinline controls preload="metadata"></video>
+              <div class="player-overlay" id="playerOverlay">
+                <div class="player-loading" id="playerLoading" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading stream…</p>
+                </div>
+                <div class="player-error" id="playerError" hidden>
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <p id="playerErrorText">This stream could not be played.</p>
+                  <button class="btn btn-small" id="playerRetryBtn"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+                </div>
+              </div>
+            </div>
+            <div class="player-meta">
+              <div class="player-channel">
+                <img id="nowPlayingLogo" class="now-logo" alt="" src="" />
+                <div>
+                  <h3 id="nowPlayingName">No channel selected</h3>
+                  <p id="nowPlayingMeta" class="muted">Choose a channel below to start watching.</p>
+                </div>
+              </div>
+              <div class="player-controls-extra">
+                <button class="icon-btn" id="prevChannelBtn" aria-label="Previous channel"><i class="fa-solid fa-backward-step"></i></button>
+                <button class="icon-btn" id="nextChannelBtn" aria-label="Next channel"><i class="fa-solid fa-forward-step"></i></button>
+                <button class="icon-btn" id="favToggleBtn" aria-label="Toggle favorite"><i class="fa-regular fa-heart"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="live-side">
+            <div class="section-head compact">
+              <h2 data-i18n="live.channels">Channels</h2>
+              <span class="badge" id="liveResultCount"></span>
+            </div>
+            <div class="live-filters">
+              <input type="search" id="liveSearch" class="input" placeholder="Filter channels…" aria-label="Filter channels" />
+              <select id="liveCountryFilter" class="input" aria-label="Filter by country"></select>
+              <select id="liveCategoryFilter" class="input" aria-label="Filter by category"></select>
+            </div>
+            <div class="live-list" id="liveList" role="listbox" aria-label="Channel list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: ALL CHANNELS ===== -->
+      <section class="view" id="view-channels" hidden>
+        <div class="section-head">
+          <h2 data-i18n="nav.channels">All Channels</h2>
+          <span class="badge" id="channelsResultCount"></span>
+        </div>
+        <div class="filter-bar">
+          <input type="search" id="channelsSearch" class="input" placeholder="Search channel name…" aria-label="Search channel name" />
+          <select id="channelsCountry" class="input" aria-label="Filter by country"></select>
+          <select id="channelsLanguage" class="input" aria-label="Filter by language"></select>
+          <select id="channelsCategory" class="input" aria-label="Filter by category"></select>
+          <select id="channelsSort" class="input" aria-label="Sort channels">
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+          </select>
+          <button class="btn btn-ghost btn-small" id="clearChannelFilters"><i class="fa-solid fa-filter-circle-xmark"></i> Clear</button>
+        </div>
+        <div class="card-grid" id="allChannelsGrid"></div>
+        <div class="empty-state" id="channelsEmpty" hidden>
+          <i class="fa-regular fa-face-frown"></i>
+          <p>No channels match your filters.</p>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: COUNTRIES ===== -->
+      <section class="view" id="view-countries" hidden>
+        <div class="section-head"><h2 data-i18n="nav.countries">Countries</h2></div>
+        <div class="chip-row" id="countryChipsFull"></div>
+        <div class="card-grid" id="countryChannelGrid"></div>
+      </section>
+
+      <!-- ===== VIEW: CATEGORIES ===== -->
+      <section class="view" id="view-categories" hidden>
+        <div class="section-head"><h2 data-i18n="nav.categories">Categories</h2></div>
+        <div class="chip-row" id="categoryChipsFull"></div>
+        <div class="card-grid" id="categoryChannelGrid"></div>
+      </section>
+
+      <!-- ===== VIEW: FAVORITES ===== -->
+      <section class="view" id="view-favorites" hidden>
+        <div class="section-head">
+          <h2 data-i18n="nav.favorites">Favorites</h2>
+          <button class="btn btn-ghost btn-small" id="clearFavoritesBtn"><i class="fa-solid fa-trash-can"></i> Clear all</button>
+        </div>
+        <div class="card-grid" id="favoritesGrid"></div>
+        <div class="empty-state" id="favoritesEmpty" hidden>
+          <i class="fa-regular fa-heart"></i>
+          <p>No favorites yet. Tap the heart on any channel to save it.</p>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: RECENTLY WATCHED ===== -->
+      <section class="view" id="view-recent" hidden>
+        <div class="section-head">
+          <h2 data-i18n="nav.recent">Recently Watched</h2>
+          <button class="btn btn-ghost btn-small" id="clearHistoryBtn"><i class="fa-solid fa-trash-can"></i> Clear history</button>
+        </div>
+        <div class="card-grid" id="recentGrid"></div>
+        <div class="empty-state" id="recentEmpty" hidden>
+          <i class="fa-regular fa-clock"></i>
+          <p>Nothing watched yet. Start a stream to build your history.</p>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: SETTINGS ===== -->
+      <section class="view" id="view-settings" hidden>
+        <div class="section-head"><h2 data-i18n="nav.settings">Settings</h2></div>
+        <div class="settings-card">
+          <div class="setting-row">
+            <label for="settingsLang" data-i18n="settings.lang">Interface language</label>
+            <select id="settingsLang" class="input">
+              <option value="en">English</option>
+              <option value="bn">বাংলা</option>
+              <option value="hi">हिन्दी</option>
+              <option value="ar">العربية</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <span data-i18n="settings.storage">Stored preferences</span>
+            <div class="settings-actions">
+              <button class="btn btn-ghost btn-small" id="exportPrefsBtn"><i class="fa-solid fa-download"></i> Export</button>
+              <button class="btn btn-ghost btn-small" id="resetPrefsBtn"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <span>Playlist source</span>
+            <code class="source-code">iptv-org.github.io/iptv/index.m3u</code>
+          </div>
+          <div class="setting-row">
+            <span>Note</span>
+            <p class="muted">CORS may block direct playlist fetch. The app will fall back to a curated sample if blocked.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== BOTTOM NAV (mobile) ==================== -->
+  <nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="Mobile navigation">
+    <button class="bn-btn active" data-view="home"><i class="fa-solid fa-house"></i><span data-i18n="nav.home">Home</span></button>
+    <button class="bn-btn" data-view="live"><i class="fa-solid fa-tv"></i><span data-i18n="nav.live">Live</span></button>
+    <button class="bn-btn" data-view="channels"><i class="fa-solid fa-list"></i><span data-i18n="nav.channels">All</span></button>
+    <button class="bn-btn" data-view="favorites"><i class="fa-solid fa-heart"></i><span data-i18n="nav.favorites">Fav</span></button>
+    <button class="bn-btn" data-view="settings"><i class="fa-solid fa-gear"></i><span data-i18n="nav.settings">Settings</span></button>
+  </nav>
+
+  <!-- Toast container -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
